@@ -20,11 +20,8 @@ function getQueryParams(): Record<string, string> {
 
 export default function CompareIPhones() {
   const router = useRouter()
-  const [learnMoreStates, setLearnMoreStates] = useState([false, false])
   const [learnMoreClicks, setLearnMoreClicks] = useState<string[]>([])
   const [mouseoverData, setMouseoverData] = useState<string[]>([])
-  const mouseoverStartTime = useRef<number | null>(null)
-  const currentMouseover = useRef<string | null>(null)
   const [qualtricsParms, setQualtricsParms] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -79,25 +76,10 @@ export default function CompareIPhones() {
     },
   ]
 
-  const handleLearnMore = (index: number) => {
-    setLearnMoreStates((prevState) => {
-      const newState = [...prevState]
-      newState[index] = true
-      return newState
-    })
-    setLearnMoreClicks((prevClicks) => [...prevClicks, phones[index].shortName])
-  }
-
   const handleRedirect = (buyParam: string = '', exitValue: number = 0) => {
     // Construct URL with original and Qualtrics parameters
     const lmclicks = learnMoreClicks.join(",")
-    const moData = mouseoverData.map(item => {
-      const [phoneName, feature, duration] = item.split("-")
-      const phone = phones.find(p => p.name === phoneName)
-      if (!phone) return item
-      const shortFeature = feature.slice(0, 3)
-      return `${phone.shortName}-${shortFeature}-${duration}`
-    }).join(",").slice(0, 4000)
+    const moData = mouseoverData.join(",").slice(0, 4000)
 
     // Construct URL with existing Qualtrics parameters and new parameters
     const baseUrl = 'https://baylor.qualtrics.com/jfe/form/SV_cUs5YHREWAFwGSG/'
@@ -116,53 +98,6 @@ export default function CompareIPhones() {
     handleRedirect('', 1)  // Pass exit=1 directly here
   }
 
-  const handleMouseEnter = (phoneName: string, feature: string) => {
-    if (learnMoreStates[phones.findIndex((phone) => phone.name === phoneName)]) {
-      mouseoverStartTime.current = Date.now()
-      currentMouseover.current = `${phoneName}-${feature}`
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (mouseoverStartTime.current && currentMouseover.current) {
-      const duration = Date.now() - mouseoverStartTime.current
-      if (duration >= 20) {
-        const [phoneName, feature] = currentMouseover.current.split("-")
-        setMouseoverData((prevData) => {
-          const newData = [...prevData]
-          const phone = phones.find(p => p.name === phoneName)
-          if (phone) {
-            const shortFeature = feature.slice(0, 3)
-            newData.push(`${phone.shortName}-${shortFeature}-${duration}`)
-          }
-          return newData
-        })
-      }
-      mouseoverStartTime.current = null
-      currentMouseover.current = null
-    }
-  }
-
-  useEffect(() => {
-    return () => {
-      if (mouseoverStartTime.current && currentMouseover.current) {
-        const duration = Date.now() - mouseoverStartTime.current
-        if (duration >= 20) {
-          const [phoneName, feature] = currentMouseover.current.split("-")
-          setMouseoverData((prevData) => {
-            const newData = [...prevData]
-            const phone = phones.find(p => p.name === phoneName)
-            if (phone) {
-              const shortFeature = feature.slice(0, 3)
-              newData.push(`${phone.shortName}-${shortFeature}-${duration}`)
-            }
-            return newData
-          })
-        }
-      }
-    }
-  }, [])
-
   return (
     <div className="max-w-5xl mx-auto px-4">
       <div className="relative w-full" onClick={handleTopImageClick}>
@@ -176,18 +111,18 @@ export default function CompareIPhones() {
         />
       </div>
       <div className="px-4 py-8 space-y-8">
-        <div className="text-center h-0 invisible">
+        <div className="text-center">
           <div className="flex justify-center items-center">
             <Check className="w-6 h-6 mr-2 text-green-500" />
             <span className="text-base">Thank you for your order.</span>
             <span className="text-base text-blue-500 ml-2">View order confirmation</span>
           </div>
-          <p className="text-2x1 font-semibold mt-6">It is not too late to upgrade:</p>
+          <p className="text-base font-semibold mt-6"></p>
         </div>
 
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-blue-700">Would you like to switch to the iPhone 16 Pro?</h1>
-          <p className="text-base mt-2">On this screen, you can Select either option or you can click Learn more to get additional information.</p>
+          <h1 className="text-2xl font-semibold">MODEL. Which is best for you?</h1>
+          <p className="text-base mt-2">We would just like to assess which of the 2 iPhone models you currently think is best for you, whether that answer is the same as on the previous screen or not.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -209,51 +144,11 @@ export default function CompareIPhones() {
                   >
                     Select
                   </button>
-                  <p className="text-xs text-center text-gray-600">
-                    {phone.shortName === "iPhone16Pro" ? "(Switch to iPhone 16 Pro & Update Cart)" : "(Proceed with iPhone 16)"}
+                  <p className="text-xs text-center text-gray-600 mt-1">
+                    {phone.shortName === "iPhone16Pro" ? "(Switch to iPhone 16 Pro & Update Order)" : "(Proceed with iPhone 16)"}
                   </p>
                 </div>
               </div>
-
-              <div className="space-y-4">
-                <p className="text-xs text-center text-gray-600">
-                  If you&apos;d like to learn more information about the phone in this column, click &quot;learn more&quot;
-                  directly below and then hover over the features (e.g., &quot;optical zoom&quot; or
-                  &quot;chip&quot;).
-                </p>
-                <button
-                  className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
-                  onClick={() => handleLearnMore(index)}
-                >
-                  Learn more
-                </button>
-              </div>
-
-              {learnMoreStates[index] && (
-                <div className="space-y-4 pt-4">
-                  <FeatureItem
-                    text={phone.display.label}
-                    subText={`${phone.display.type}\n${phone.display.tech}\n${phone.display.extra}`}
-                    isEnabled={learnMoreStates[index]}
-                    onMouseEnter={() => handleMouseEnter(phone.name, "display")}
-                    onMouseLeave={handleMouseLeave}
-                  />
-
-                  <div className="space-y-4 grid grid-cols-1 gap-2">
-                    {Object.entries(phone.features).map(([key, value]) => (
-                      <FeatureItem
-                        key={key}
-                        icon={getIconForFeature(key)}
-                        text={getFeatureDisplayName(key)}
-                        subText={value}
-                        isEnabled={learnMoreStates[index]}
-                        onMouseEnter={() => handleMouseEnter(phone.name, key)}
-                        onMouseLeave={handleMouseLeave}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           ))}
         </div>
