@@ -1,10 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Battery, Camera, Cpu, ZoomIn, Maximize, Usb, Check } from "lucide-react"
-import { type LucideIcon } from 'lucide-react'
+import { Check } from "lucide-react"
 
 function getQueryParams(): Record<string, string> {
   if (typeof window !== 'undefined') {
@@ -115,12 +114,12 @@ export default function CompareIPhones() {
             <span className="text-base">Thank you for your order.</span>
             <span className="text-base text-blue-500 ml-2">View order confirmation</span>
           </div>
-          <p className="text-2x1 font-semibold mt-6">It is not too late to upgrade:</p>
+          <p className="text-2xl font-semibold mt-6">It is not too late to upgrade:</p>
         </div>
 
         <div className="text-center">
           <h1 className="text-2xl font-semibold text-blue-700">MODEL. Which is best for you?</h1>
-          <p className="text-base mt-2">We would just like to assess which of the 2 iPhone models you currently think is best for you, whether that answer is the same as on the previous screen or not.[...]
+          <p className="text-base mt-2">We would just like to assess which of the 2 iPhone models you currently think is best for you, whether that answer is the same as on the previous screen or not.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -142,7 +141,6 @@ export default function CompareIPhones() {
                   >
                     Select
                   </button>
-
                 </div>
               </div>
             </div>
@@ -175,14 +173,14 @@ function getIconForFeature(feature: string): LucideIcon | undefined {
     case "chip":
       return Cpu
     case "camera":
-        return Camera
+      return Camera
     case "batteryLife":
-        return Battery
+      return Battery
     case "iphoneSize":
-        return Maximize
+      return Maximize
     case "transferSpeeds":
-        return Usb
+      return Usb
     default:
-        return undefined
-    }
+      return undefined
+  }
 }
