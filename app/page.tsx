@@ -102,8 +102,8 @@ export default function CompareIPhones() {
         </div>
 
         <div className="text-center">
-          <h1 className="text-2xl font-semibold">MODEL. Which is best for you?</h1>
-          <p className="text-base mt-2">We would just like to assess which of the 2 iPhone models you currently think is best for you, whether that answer is the same as on the previous screen or not</p>
+          <h1 className="text-2xl font-semibold">Would you like to proceed forward with the iPhone 16?</h1>
+          <p className="text-base mt-2">On this screen, you can Select either option or you can click Learn more to get additional information.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -125,7 +125,8 @@ export default function CompareIPhones() {
                   >
                     Select
                   </button>
-
+                  <p className="text-xs text-center text-gray-600 mt-1">
+                    {phone.shortName === "iPhone16Pro" ? "(Switch to iPhone 16 Pro & Update Order)" : "(Proceed with iPhone 16)"}
                   </p>
                 </div>
               </div>
