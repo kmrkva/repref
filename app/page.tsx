@@ -1,10 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Battery, Camera, Cpu, ZoomIn, Maximize, Usb, Check } from "lucide-react"
-import { type LucideIcon } from 'lucide-react'
+import { Check } from "lucide-react"
 
 function getQueryParams(): Record<string, string> {
   if (typeof window !== 'undefined') {
@@ -20,15 +19,13 @@ function getQueryParams(): Record<string, string> {
 
 export default function CompareIPhones() {
   const router = useRouter()
-  const [learnMoreClicks, setLearnMoreClicks] = useState<string[]>([])
-  const [mouseoverData, setMouseoverData] = useState<string[]>([])
   const [qualtricsParms, setQualtricsParms] = useState<Record<string, string>>({})
 
   useEffect(() => {
     // Store Qualtrics parameters on initial load
     setQualtricsParms(getQueryParams())
   }, [])
-  
+
   const phones = [
     {
       name: "iPhone 16 Pro",
@@ -42,14 +39,6 @@ export default function CompareIPhones() {
         type: "Super Retina XDR display",
         tech: "ProMotion technology",
         extra: "Always-On display",
-      },
-      features: {
-        opticalZoom: "Up to 5x",
-        chip: "A17 Pro chip",
-        camera: "Pro camera system\n48MP Main | Ultra Wide | Telephoto",
-        batteryLife: "Up to 29 hours video playback",
-        iphoneSize: "6.3 inches",
-        transferSpeeds: "Supports USB 3 for up to 20x faster transfers",
       },
     },
     {
@@ -65,21 +54,13 @@ export default function CompareIPhones() {
         tech: "❌ no ProMotion technology",
         extra: "❌ no Always-On display",
       },
-      features: {
-        opticalZoom: "Up to 2x",
-        chip: "A16 Bionic chip",
-        camera: "Dual-camera system\n48MP Main | Ultra Wide",
-        batteryLife: "Up to 26 hours video playback",
-        iphoneSize: "6.1 inches",
-        transferSpeeds: "Supports USB 2",
-      },
     },
   ]
 
   const handleRedirect = (buyParam: string = '', exitValue: number = 0) => {
     // Construct URL with original and Qualtrics parameters
-    const lmclicks = learnMoreClicks.join(",")
-    const moData = mouseoverData.join(",").slice(0, 4000)
+    const lmclicks = ''
+    const moData = ''
 
     // Construct URL with existing Qualtrics parameters and new parameters
     const baseUrl = 'https://baylor.qualtrics.com/jfe/form/SV_cUs5YHREWAFwGSG/'
@@ -121,8 +102,8 @@ export default function CompareIPhones() {
         </div>
 
         <div className="text-center">
-          <h1 className="text-2xl font-semibold">MODEL. Which is best for you?</h1>
-          <p className="text-base mt-2">We would just like to assess which of the 2 iPhone models you currently think is best for you, whether that answer is the same as on the previous screen or not.</p>
+          <h1 className="text-2xl font-semibold">Would you like to proceed forward with the iPhone 16?</h1>
+          <p className="text-base mt-2">On this screen, you can Select either option or you can click Learn more to get additional information.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -155,77 +136,4 @@ export default function CompareIPhones() {
       </div>
     </div>
   )
-}
-
-function getFeatureDisplayName(feature: string): string {
-  switch (feature) {
-    case "batteryLife":
-      return "battery life"
-    case "transferSpeeds":
-      return "transfer speeds & USB"
-    case "iphoneSize":
-      return "iPhone size"
-    case "opticalZoom":
-      return "optical zoom"
-    default:
-      return feature
-  }
-}
-
-function FeatureItem({
-  icon: Icon,
-  text,
-  subText,
-  isEnabled,
-  onMouseEnter,
-  onMouseLeave,
-}: {
-  icon?: LucideIcon
-  text: string
-  subText?: string
-  isEnabled: boolean
-  onMouseEnter: () => void
-  onMouseLeave: () => void
-}) {
-  return (
-    <div
-      className={`group relative border border-gray-200 rounded-md ${isEnabled ? "cursor-pointer" : "cursor-not-allowed"}`}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      {isEnabled && (
-        <div className="w-full h-full min-h-[80px] opacity-0 group-hover:opacity-100 absolute inset-0 transition-opacity duration-200 flex flex-col items-center justify-center bg-white/80 backdrop-blur-md">
-          <p className="text-sm font-medium">{text}</p>
-          {subText && <p className="text-xs text-gray-600 whitespace-pre-line">{subText}</p>}
-        </div>
-      )}
-      <div className="text-center space-y-1 p-4">
-        {Icon && (
-          <div className="flex justify-center">
-            <Icon className="w-6 h-6" />
-          </div>
-        )}
-        <p className="text-sm">{text}</p>
-      </div>
-    </div>
-  )
-}
-
-function getIconForFeature(feature: string): LucideIcon | undefined {
-  switch (feature) {
-    case "opticalZoom":
-      return ZoomIn
-    case "chip":
-      return Cpu
-    case "camera":
-      return Camera
-    case "batteryLife":
-      return Battery
-    case "iphoneSize":
-      return Maximize
-    case "transferSpeeds":
-      return Usb
-    default:
-      return undefined
-  }
 }
