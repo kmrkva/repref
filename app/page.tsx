@@ -150,37 +150,3 @@ export default function CompareIPhones() {
     </div>
   )
 }
-
-function getFeatureDisplayName(feature: string): string {
-  switch (feature) {
-    case "batteryLife":
-      return "battery life"
-    case "transferSpeeds":
-      return "transfer speeds & USB"
-    case "iphoneSize":
-      return "iPhone size"
-    case "opticalZoom":
-      return "optical zoom"
-    default:
-      return feature
-  }
-}
-
-function getIconForFeature(feature: string): LucideIcon | undefined {
-  switch (feature) {
-    case "opticalZoom":
-      return ZoomIn
-    case "chip":
-      return Cpu
-    case "camera":
-      return Camera
-    case "batteryLife":
-      return Battery
-    case "iphoneSize":
-      return Maximize
-    case "transferSpeeds":
-      return Usb
-    default:
-      return undefined
-  }
-}
